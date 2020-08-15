@@ -1,0 +1,35 @@
+version: "3"
+
+services: 
+
+   server:
+      build: 
+         context: ../
+         dockerfile: ./docker/Dockerfile.server
+      container_name: node_server
+      restart: always
+      volumes: 
+         - ../:/usr/src/app
+      ports: 
+         - 7000:7000
+
+   mysql_db: 
+      build: 
+         context: ../
+         dockerfile: ./docker/Dockerfile.dbs
+      container_name: mysqldb
+      env_file: ../.env
+      restart: always
+      volumes: 
+         - ../../mysql/data:/var/lib/mysql
+      ports: 
+         - 3306:3306
+
+   adminer: 
+      image: adminer
+      restart: always
+      ports: 
+         - 8080:8080
+      container_name: adminer
+      environment: 
+         ADMINER_DEFAULT_SERVER: mysqldb
